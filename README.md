@@ -3,11 +3,11 @@ Redash docker images and docker-compose for ARM64
 
 ## Usage
 
-Docker image is already available on [the docker image container](https://github.com/ktmrmshk/redash_for_arm64/pkgs/container/redash_arm64), so that you can start up by just downloading the setup script(`setup.py`) and `docker-compose.yml` and spinning up the docker containers by docker-compose. These scripts are based on original one in [the redash git repository](https://github.com/getredash/redash) and modified to match ARM64 enviroment. If you want to learn more, check out this repository and original repo and diff them according to later section.
+Docker image is already available on [this docker image repo](https://github.com/ktmrmshk/redash_for_arm64/pkgs/container/redash_arm64), so that you can start up by just downloading the setup script(`setup.py`) and `docker-compose.yml` and spinning up the docker containers by docker-compose. These scripts are based on original one in [the redash git repository](https://github.com/getredash/redash) and modified to match ARM64 enviroment. If you want to learn more, check out this repository and original repo and diff them according to later section.
 
 ### Prerequisite
 
-* PC enviromnent of ARM64
+* PC environment of ARM64 (M1 mac, graviton2, Ampere Altra, raspberry pi etc...)
 * Docker
 * docker-compose
 * `pwgen` command
@@ -61,4 +61,39 @@ Access to the this host with port=5000 in the browser. i.e. `http://localhost:50
 
 ## Building a docker image from source
 
-stay tuned....
+On how this docker image are built.
+
+```bash
+## clone original repo
+$ git clone https://github.com/getredash/redash.git
+
+## clone this repo which includes files for docker-build on ARM64
+$ git clone https://github.com/ktmrmshk/redash_for_arm64.git
+
+## copy files needed ( or replace it with original ones)
+$ cp redash_for_arm64/redash/* redash/
+
+## check the files
+$ cd redash
+$ ls -l
+...
+-rw-rw-r--  1 ubuntu docker   3306 Jan  9 14:11 Dockerfile
+-rw-rw-r--  1 ubuntu docker   3402 Jan  9 14:12 Dockerfile_arm64
+...
+-rw-rw-r--  1 ubuntu docker   1684 Jan  9 14:11 requirements.txt
+-rw-rw-r--  1 ubuntu docker   1670 Jan  9 14:12 requirements_arm64.txt
+-rw-rw-r--  1 ubuntu docker    823 Jan  9 14:11 requirements_all_ds.txt
+-rw-rw-r--  1 ubuntu docker    833 Jan  9 14:12 requirements_all_ds_arm64.txt
+...
+
+## docker build
+$ docker build -t ghcr.io/ktmrmshk/redash_arm64:latest -f Dockerfile_arm64 .
+
+## check after build
+$ docker images
+REPOSITORY                      TAG               IMAGE ID       CREATED         SIZE
+ghcr.io/ktmrmshk/redash_arm64   latest            de80d066a8e6   6 hours ago     1.1GB
+```
+
+
+
